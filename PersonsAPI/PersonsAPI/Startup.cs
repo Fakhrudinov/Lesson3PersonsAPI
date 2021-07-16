@@ -46,6 +46,9 @@ namespace PersonsAPI
 
             services.RegisterBusinesLogic();
             services.RegisterDataLayer();
+
+            services.RegisterBusinesLogicClinic();
+            services.RegisterDataLayerClinic();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

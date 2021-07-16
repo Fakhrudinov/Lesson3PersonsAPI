@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataLayer.Abstraction.Repositories;
 using Microsoft.EntityFrameworkCore;
+using DataLayer.Abstraction.Entityes;
 
 namespace DataLayer.Repositories
 {
@@ -15,26 +16,26 @@ namespace DataLayer.Repositories
             _context = context;
         }
 
-        public async Task<Person> GetPersonByIdAsync(int id)
+        public async Task<PersonDataLayer> GetPersonByIdAsync(int id)
         {
             return await _context.Persons
                 .Where(p => p.Id.Equals(id))
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Person>> GetPersonsAsync()
+        public async Task<IEnumerable<PersonDataLayer>> GetPersonsAsync()
         {
             return await _context.Persons.ToArrayAsync();
         }
 
-        public async Task<IEnumerable<Person>> GetPersonsByNameAsync(string term)
+        public async Task<IEnumerable<PersonDataLayer>> GetPersonsByNameAsync(string term)
         {
             return await _context.Persons
                 .Where(p => p.FirstName.Contains(term) || p.LastName.Contains(term))
                 .ToArrayAsync();
         }
 
-        public async Task<IEnumerable<Person>> GetPersonsByNameWithPaginationAsync(string term, int skip, int take)
+        public async Task<IEnumerable<PersonDataLayer>> GetPersonsByNameWithPaginationAsync(string term, int skip, int take)
         {
             return await _context.Persons
                 .Where(p => p.FirstName.Contains(term) || p.LastName.Contains(term))
@@ -43,7 +44,7 @@ namespace DataLayer.Repositories
                 .ToArrayAsync();
         }
 
-        public async Task<IEnumerable<Person>> GetPersonsWithPaginationAsync(int skip, int take)
+        public async Task<IEnumerable<PersonDataLayer>> GetPersonsWithPaginationAsync(int skip, int take)
         {
             return await _context.Persons
                 .Skip(skip * take)
@@ -53,7 +54,7 @@ namespace DataLayer.Repositories
 
         public async Task DeletePersonByIdAsync(int id)
         {
-            Person personToDelete = _context.Persons.Find(id);
+            PersonDataLayer personToDelete = _context.Persons.Find(id);
 
             if (personToDelete != null)
             {
@@ -62,15 +63,15 @@ namespace DataLayer.Repositories
             }
         }
 
-        public async Task RegisterPersonAsync(Person newPerson)
+        public async Task RegisterPersonAsync(PersonDataLayer newPerson)
         {
             await _context.Persons.AddAsync(newPerson);
             await _context.SaveChangesAsync();
         }
 
-        public async Task EditPersonAsync(Person editPerson, int id)
+        public async Task EditPersonAsync(PersonDataLayer editPerson, int id)
         {
-            Person personToEdit = _context.Persons.Find(id);
+            PersonDataLayer personToEdit = _context.Persons.Find(id);
 
             if (personToEdit != null)
             {
@@ -84,6 +85,14 @@ namespace DataLayer.Repositories
 
                 await _context.SaveChangesAsync();
             }
+        }
+
+
+        public async Task SetClinicToPersonByIDAsync(PersonDataLayer pers, ClinicDataLayer clin)
+        {
+            //pers.Clinics.Add(clin);
+            clin.Persons.Add(pers);
+            await _context.SaveChangesAsync();
         }
     }
 }

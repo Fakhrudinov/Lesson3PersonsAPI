@@ -15,5 +15,6 @@ namespace BusinesLogic.Abstraction.Services
         Task RegisterPersonAsync(PersonToPost newPerson);
         Task EditPersonAsync(PersonToGet newPerson, int id);
         Task DeletePersonByIdAsync(int id);
+        Task SetClinicToPersonByIDAsync(ClinicToGet clinic, PersonToGet personToGet);
     }
 }

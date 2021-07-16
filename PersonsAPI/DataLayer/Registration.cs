@@ -10,5 +10,10 @@ namespace DataLayer
         {
             return services.AddTransient<IPersonRepository, PersonRepository>();
         }
+
+        public static IServiceCollection RegisterDataLayerClinic(this IServiceCollection services)
+        {
+            return services.AddTransient<IClinicRepository, ClinicRepository>();
+        }
     }
 }

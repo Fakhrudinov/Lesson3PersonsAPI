@@ -9,8 +9,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBaseMigration.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
-    [Migration("20210711121032_Initial")]
-    partial class Initial
+    [Migration("20210716112801_Many2Many122")]
+    partial class Many2Many122
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,7 +20,60 @@ namespace DataBaseMigration.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("DataLayer.Person", b =>
+            modelBuilder.Entity("ClinicDataLayerPersonDataLayer", b =>
+                {
+                    b.Property<int>("ClinicsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PersonsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ClinicsId", "PersonsId");
+
+                    b.HasIndex("PersonsId");
+
+                    b.ToTable("ClinicDataLayerPersonDataLayer");
+                });
+
+            modelBuilder.Entity("DataLayer.Abstraction.Entityes.ClinicDataLayer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Adress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clinics");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            Adress = "132123 333ывадтфывафыва 1",
+                            Name = "Clinic3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Adress = "132123 444ывадтфывафыва 1",
+                            Name = "Clinic4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Adress = "132123 555ывадтфывафыва 1",
+                            Name = "Clinic5"
+                        });
+                });
+
+            modelBuilder.Entity("DataLayer.Abstraction.Entityes.PersonDataLayer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -497,6 +550,21 @@ namespace DataBaseMigration.Migrations
                             FirstName = "Ramona",
                             LastName = "Gilliam"
                         });
+                });
+
+            modelBuilder.Entity("ClinicDataLayerPersonDataLayer", b =>
+                {
+                    b.HasOne("DataLayer.Abstraction.Entityes.ClinicDataLayer", null)
+                        .WithMany()
+                        .HasForeignKey("ClinicsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataLayer.Abstraction.Entityes.PersonDataLayer", null)
+                        .WithMany()
+                        .HasForeignKey("PersonsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

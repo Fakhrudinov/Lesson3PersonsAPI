@@ -27,7 +27,6 @@ namespace PersonsAPI.Controllers
             _logger = logger;
             _personService = personService;
             _settings = options.Value;
-
         }
 
         /// <summary>
