@@ -86,13 +86,5 @@ namespace DataLayer.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-
-
-        public async Task SetClinicToPersonByIDAsync(PersonDataLayer pers, ClinicDataLayer clin)
-        {
-            //pers.Clinics.Add(clin);
-            clin.Persons.Add(pers);
-            await _context.SaveChangesAsync();
-        }
     }
 }

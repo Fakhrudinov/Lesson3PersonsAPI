@@ -9,8 +9,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBaseMigration.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
-    [Migration("20210716112051_Many2Many11")]
-    partial class Many2Many11
+    [Migration("20210718045841_isItFix")]
+    partial class isItFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

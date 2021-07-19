@@ -19,36 +19,24 @@ namespace DataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder
-            //.Entity<ClinicDataLayer>()
-            //.HasMany(c => c.Persons)
-            //.WithMany(s => s.Clinics);
-
-            //modelBuilder
-            //    .Entity<ClinicDataLayer>()
-            //    .HasMany(c => c.Persons)
-            //    .WithMany(s => s.Clinics)
-            //    .UsingEntity<PersonToClinic>
-            //    (
-            //        j => j
-            //            .HasOne(pt => pt.Person)
-            //            .WithMany(t => t.PersonToClinics)
-            //            .HasForeignKey(pt => pt.PersonId),
-            //        j => j
-            //            .HasOne(pt => pt.Clinic)
-            //            .WithMany(p => p.PersonToClinics)
-            //            .HasForeignKey(pt => pt.ClinicId),
-            //        j =>
-            //            {
-            //                j.HasKey(t => new { t.ClinicId, t.PersonId });
-            //                j.ToTable("PersonToClinic");
-            //            }
-            //    );
+            modelBuilder
+            .Entity<ClinicDataLayer>()
+            .HasMany(c => c.Persons)
+            .WithMany(s => s.Clinics);
 
             modelBuilder.Entity<ClinicDataLayer>().HasData(
-                new ClinicDataLayer { Id = 3, Name = "Clinic3", Adress = "132123 333ывадтфывафыва 1" },
-                new ClinicDataLayer { Id = 4, Name = "Clinic4", Adress = "132123 444ывадтфывафыва 1" },
-                new ClinicDataLayer { Id = 5, Name = "Clinic5", Adress = "132123 555ывадтфывафыва 1" }
+                new ClinicDataLayer { Id = 1, Name = "Eye Clinic1", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 2, Name = "Eye Clinic2", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 3, Name = "Eye Clinic3", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 4, Name = "Eye Clinic4", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 5, Name = "Tooth Clinic1", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 6, Name = "Tooth Clinic2", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 7, Name = "Tooth Clinic3", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 8, Name = "Tooth Clinic4", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 9, Name = "ass Clinic1 ", Adress = "132123 444ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 10, Name = "ass Clinic2", Adress = "132123 333ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 11, Name = "ass Clinic3", Adress = "132123 444ывадтфывафыва 1" },
+                new ClinicDataLayer { Id = 12, Name = "ass Clinic4", Adress = "132123 555ывадтфывафыва 1" }
                 );
 
             modelBuilder.Entity<PersonDataLayer>().HasData(

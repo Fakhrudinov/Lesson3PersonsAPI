@@ -46,6 +46,39 @@ namespace BusinesLogic.Services
             return findedClinic;
         }
 
+        public async Task<IEnumerable<ClinicToGet>> GetClinicsByNameWithPaginationAsync(string searchTerm, int skip, int take)
+        {
+            var result = await _repository.GetClinicsByNameWithPaginationAsync(searchTerm, skip, take);
+            return result.Select(p => new ClinicToGet()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Adress = p.Adress,
+            }).ToArray();
+        }
+
+        public async Task<IEnumerable<ClinicToGet>> GetClinicsByNameAsync(string term)
+        {
+            var result = await _repository.GetClinicsByNameAsync(term);
+            return result.Select(p => new ClinicToGet()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Adress = p.Adress,
+            }).ToArray();
+        }
+
+        public async Task<IEnumerable<ClinicToGet>> GetClinicsWithPaginationAsync(int skip, int take)
+        {
+            var result = await _repository.GetClinicsWithPaginationAsync(skip, take);
+            return result.Select(p => new ClinicToGet()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Adress = p.Adress,
+            }).ToArray();
+        }
+
         public async Task RegisterClinicAsync(ClinicToPost clinic)
         {
             ClinicDataLayer newClinic = new ClinicDataLayer();
@@ -54,6 +87,21 @@ namespace BusinesLogic.Services
             newClinic.Adress = clinic.Adress;
 
             await _repository.RegisterClinicAsync(newClinic);
+        }
+
+        public async Task EditClinicAsync(ClinicToGet clinic, int id)
+        {
+            ClinicDataLayer editClinic = new ClinicDataLayer();
+
+            editClinic.Name = clinic.Name;
+            editClinic.Adress = clinic.Adress;
+
+            await _repository.EditClinicAsync(editClinic, id);
+        }
+
+        public async Task DeleteClinicByIdAsync(int id)
+        {
+            await _repository.DeleteClinicByIdAsync(id);
         }
     }
 }

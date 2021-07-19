@@ -3,10 +3,8 @@ using BusinesLogic.Abstraction.Services;
 using DataLayer.Abstraction.Entityes;
 using DataLayer.Abstraction.Repositories;
 using PersonsAPI.Requests;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BusinesLogic.Services
@@ -14,13 +12,10 @@ namespace BusinesLogic.Services
     public class PersonService : IPersonService
     {
         private IPersonRepository _repository;
-        private IClinicRepository _repoCL;
-        //Удалить из шапки repoCL !!!! ----------------------------------------------------------------------------
 
-        public PersonService(IPersonRepository repository, IClinicRepository repoCL)
+        public PersonService(IPersonRepository repository)
         {
             _repository = repository;
-            _repoCL = repoCL;
         }
 
 
@@ -128,26 +123,5 @@ namespace BusinesLogic.Services
         {
             await _repository.DeletePersonByIdAsync(id);
         }
-
-        public async Task SetClinicToPersonByIDAsync(ClinicToGet clinic, PersonToGet person)
-        {
-            PersonDataLayer newPerson = new PersonDataLayer();
-            newPerson.Id = person.Id;
-            newPerson.FirstName = person.FirstName;
-            newPerson.LastName = person.LastName;
-            newPerson.Age = person.Age;
-            newPerson.Email = person.Email;
-            newPerson.Company = person.Company;
-
-            ClinicDataLayer newClinic = new ClinicDataLayer();
-            newClinic.Id = clinic.Id;
-            newClinic.Name = clinic.Name;
-            newClinic.Adress = clinic.Adress;
-
-            await _repository.SetClinicToPersonByIDAsync(newPerson, newClinic);
-        }
-
-        //Удалить из шапки repoCL !!!! ----------------------------------------------------------------------------
-
     }   
 }

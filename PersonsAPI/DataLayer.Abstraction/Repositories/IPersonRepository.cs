@@ -14,6 +14,5 @@ namespace DataLayer.Abstraction.Repositories
         Task DeletePersonByIdAsync(int id);
         Task RegisterPersonAsync(PersonDataLayer newPerson);
         Task EditPersonAsync(PersonDataLayer editPerson, int id);
-        Task SetClinicToPersonByIDAsync(PersonDataLayer pers, ClinicDataLayer clin);
     }
 }

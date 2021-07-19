@@ -2,7 +2,7 @@
 
 namespace DataBaseMigration.Migrations
 {
-    public partial class Many2Many122 : Migration
+    public partial class isItFix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
