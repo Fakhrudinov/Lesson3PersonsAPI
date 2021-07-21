@@ -1,4 +1,5 @@
 ﻿using BusinesLogic.Abstraction.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,6 +13,8 @@ namespace PersonsAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class LinkPersonToClinicController : ControllerBase
     {
         private readonly IPersonToClinicService _personToClinic;

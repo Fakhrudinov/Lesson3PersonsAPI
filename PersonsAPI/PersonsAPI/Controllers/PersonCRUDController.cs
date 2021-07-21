@@ -7,11 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinesLogic.Abstraction.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PersonsAPI.Controllers
 {
     [ApiController]
     [Route("persons")]
+    [Authorize]
+
     public class PersonCRUDController : ControllerBase
     {
         private readonly IPersonService _personService;

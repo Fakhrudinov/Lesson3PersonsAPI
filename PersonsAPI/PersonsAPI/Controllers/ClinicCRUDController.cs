@@ -1,6 +1,7 @@
 ﻿using BusinesLogic.Abstraction.DTO;
 using BusinesLogic.Abstraction.Requests;
 using BusinesLogic.Abstraction.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using PersonsAPI.Requests;
@@ -13,6 +14,8 @@ namespace PersonsAPI.Controllers
 {
     [Route("clinics")]
     [ApiController]
+    [Authorize]
+
     public class ClinicCRUDController : ControllerBase
     {
         private readonly IClinicService _clinicService;
