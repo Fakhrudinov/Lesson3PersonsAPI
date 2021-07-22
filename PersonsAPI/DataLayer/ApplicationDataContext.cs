@@ -1,8 +1,6 @@
 ﻿using DataLayer.Abstraction.Entityes;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace DataLayer
 {
@@ -10,6 +8,11 @@ namespace DataLayer
     {
         public DbSet<PersonDataLayer> Persons { get; set; }
         public DbSet<ClinicDataLayer> Clinics { get; set; }
+
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
 
         public ApplicationDataContext(DbContextOptions<ApplicationDataContext> options) : base(options)
         {
@@ -23,6 +26,12 @@ namespace DataLayer
             .Entity<ClinicDataLayer>()
             .HasMany(c => c.Persons)
             .WithMany(s => s.Clinics);
+
+            modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, Login = "test", Password = "testtest" },
+                new User { Id = 2, Login = "user2", Password = "12334bd4b" },
+                new User { Id = 3, Login = "user2", Password = "w34f5v4w5b6" }
+                );
 
             modelBuilder.Entity<ClinicDataLayer>().HasData(
                 new ClinicDataLayer { Id = 1, Name = "Eye Clinic1", Adress = "132123 333ывадтфывафыва 1" },

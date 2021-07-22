@@ -1,63 +1,87 @@
 ﻿using BusinesLogic.Abstraction.Services;
 using DataLayer.Abstraction.Entityes;
+using DataLayer.Abstraction.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace BusinesLogic.Services
 {
     public sealed class UserService : IUserService
     {
-        private IDictionary<string, AuthResponse> _users = new Dictionary<string, AuthResponse>()
+        private IUserRepository _repository;
+
+        public UserService(IUserRepository repository)
         {
-            {"test", new AuthResponse() { Password = "test"}}
-        };
-        
+            _repository = repository;
+        }
+
+        // а где бы ее хранить?
         public const string SecretCode = "THIS IS SOME VERY SECRET STRING!!! Im blue da ba dee da ba di da ba dee da ba di da d ba dee da ba di da ba dee";
         
-        public TokenResponse Authenticate(string user, string password)
+        public async Task<TokenResponse> Authentificate(string login, string password)
         {
-            if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
                 return null;
             }
+
             TokenResponse tokenResponse = new TokenResponse();
-            int i = 0;
-            foreach (KeyValuePair<string, AuthResponse> pair in _users)
+
+            int userId = await _repository.GetUserByLogonAsync(login, password);
+            
+            if (userId > 0)
             {
-                i++;
-                if (string.CompareOrdinal(pair.Key, user) == 0 && string.CompareOrdinal(pair.Value.Password, password) == 0)
+                tokenResponse.Token = GenerateJwtToken(userId, 5);
+                RefreshToken refreshToken = GenerateRefreshToken(userId);
+                refreshToken.UserId = userId;
+                
+                //сохранить в БД RefreshToken новый refresh с UserId пользователя
+                RefreshToken isExist = await _repository.GetRefreshTokenByUserIdAsync(refreshToken);
+                if(isExist == null)
                 {
-                    tokenResponse.Token = GenerateJwtToken(i, 15);
-                    RefreshToken refreshToken = GenerateRefreshToken(i);
-                    pair.Value.LatestRefreshToken = refreshToken;
-                    tokenResponse.RefreshToken = refreshToken.Token;
-                    return tokenResponse;
+                    await _repository.SetNewRefreshTokenAsync(refreshToken);
                 }
+                else
+                {
+                    await _repository.UpdateRefreshTokenAsync(refreshToken);
+                }
+
+                tokenResponse.RefreshToken = refreshToken.Token;
+                return tokenResponse;
             }
+
             return null;
         }
 
-        public string RefreshToken(string token)
+        public async Task<string> RefreshToken(string token)
         {
-            int i = 0;
-            foreach (KeyValuePair<string, AuthResponse> pair in _users)
+            //из бд проверить наличие refresh по стринг token.
+            //вернуть найденный токен
+            RefreshToken isExist = await _repository.GetRefreshTokenByTokenIdAsync(token);
+
+            if (string.CompareOrdinal(isExist.Token, token) == 0)
             {
-                i++;
-                if (string.CompareOrdinal(pair.Value.LatestRefreshToken.Token, token) == 0
-                    && pair.Value.LatestRefreshToken.IsExpired is false)
+                if (isExist.IsExpired is false)
                 {
-                    pair.Value.LatestRefreshToken = GenerateRefreshToken(i);
-                    return pair.Value.LatestRefreshToken.Token;
+                    //обновить в БД RefreshToken 
+                    RefreshToken refreshToken = GenerateRefreshToken(isExist.UserId);
+                    refreshToken.UserId = isExist.UserId;
+
+                    await _repository.UpdateRefreshTokenAsync(refreshToken);
+
+                    //вернуть новый токен
+                    return refreshToken.Token;
                 }
             }
+                    
             return string.Empty;
         }
+
         private string GenerateJwtToken(int id, int minutes)
         {
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -79,9 +103,19 @@ namespace BusinesLogic.Services
         public RefreshToken GenerateRefreshToken(int id)
         {
             RefreshToken refreshToken = new RefreshToken();
-            refreshToken.Expires = DateTime.Now.AddMinutes(360);
-            refreshToken.Token = GenerateJwtToken(id, 360);
+            refreshToken.Expires = DateTime.Now.AddMinutes(60);
+            refreshToken.Token = GenerateJwtToken(id, 60);
             return refreshToken;
+        }
+
+        public async Task<int> GetUserByLogonAsync(string login, string password)
+        {
+            return await _repository.GetUserByLogonAsync(login, password);
+        }
+
+        public async Task CreateNewUserAsync(string login, string password)
+        {
+            await _repository.CreateNewUserAsync(login, password);
         }
     }
 }

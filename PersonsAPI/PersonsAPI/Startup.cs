@@ -30,7 +30,7 @@ namespace PersonsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddCors();
             services.AddControllers();
             services.AddAuthentication(x =>
@@ -98,7 +98,8 @@ namespace PersonsAPI
 
             services.RegisterDataLayer();
             services.RegisterDataLayerClinic();
-            services.RegisterDataLayerPersonToClinic();            
+            services.RegisterDataLayerPersonToClinic();
+            services.RegisterUserRepository();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
