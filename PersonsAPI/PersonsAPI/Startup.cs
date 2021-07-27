@@ -33,6 +33,7 @@ namespace PersonsAPI
             services.AddScoped<IUserService, UserService>();
             services.AddCors();
             services.AddControllers();
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

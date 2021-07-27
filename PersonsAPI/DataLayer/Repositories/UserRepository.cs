@@ -1,10 +1,7 @@
 ﻿using DataLayer.Abstraction.Entityes;
 using DataLayer.Abstraction.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataLayer.Repositories
@@ -29,6 +26,15 @@ namespace DataLayer.Repositories
             return findedUser.Id;
         }
 
+        public async Task<int> GetUserByLoginAsync(string login)
+        {
+            User findedUser = (await _context.Users.Where(x => x.Login == login).FirstOrDefaultAsync());
+
+            if (findedUser == null)
+                return 0;
+
+            return findedUser.Id;
+        }
 
         public async Task<RefreshToken> GetRefreshTokenByUserIdAsync(RefreshToken refreshToken)
         {

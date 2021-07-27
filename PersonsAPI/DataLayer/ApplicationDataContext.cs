@@ -28,9 +28,8 @@ namespace DataLayer
             .WithMany(s => s.Clinics);
 
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, Login = "test", Password = "testtest" },
-                new User { Id = 2, Login = "user2", Password = "12334bd4b" },
-                new User { Id = 3, Login = "user2", Password = "w34f5v4w5b6" }
+                new User { Id = 1, Login = "user1", Password = "u/J44HZsYr9/fKnrSC7GkEPfGSdLlQY0rwmXjnj2V/M=" },//pass=1qazXSW@
+                new User { Id = 2, Login = "string", Password = "gY5iKrx9HOv75+lUDwwSrR5sUirs2DknyeMqU8yHimw=" }
                 );
 
             modelBuilder.Entity<ClinicDataLayer>().HasData(

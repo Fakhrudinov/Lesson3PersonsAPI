@@ -1,9 +1,9 @@
 ﻿using BusinesLogic.Abstraction.Services;
+//using BusinesLogic.Abstraction.Validate;
 using DataLayer.Abstraction.Entityes;
 using DataLayer.Abstraction.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,7 +13,7 @@ namespace BusinesLogic.Services
 {
     public sealed class UserService : IUserService
     {
-        private IUserRepository _repository;
+        private IUserRepository _repository;        
 
         public UserService(IUserRepository repository)
         {
@@ -116,6 +116,11 @@ namespace BusinesLogic.Services
         public async Task CreateNewUserAsync(string login, string password)
         {
             await _repository.CreateNewUserAsync(login, password);
+        }
+
+        public async Task<int> GetUserByLoginAsync(string login)
+        {
+            return await _repository.GetUserByLoginAsync(login);
         }
     }
 }

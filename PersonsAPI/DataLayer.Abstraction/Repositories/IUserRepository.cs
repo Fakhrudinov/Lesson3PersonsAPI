@@ -6,6 +6,7 @@ namespace DataLayer.Abstraction.Repositories
     public interface IUserRepository
     {
         Task<int> GetUserByLogonAsync(string login, string password);
+        Task<int> GetUserByLoginAsync(string login);
         Task<RefreshToken> GetRefreshTokenByUserIdAsync(RefreshToken refreshToken);
         Task SetNewRefreshTokenAsync(RefreshToken refreshToken);
         Task UpdateRefreshTokenAsync(RefreshToken refreshToken);
