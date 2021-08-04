@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DataLayer": {
+      "commandName": "Executable",
+      "sqlDebugging": false,
+      "nativeDebugging": false
+    }
+  }
+}
