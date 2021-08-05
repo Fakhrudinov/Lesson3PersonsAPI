@@ -22,11 +22,6 @@ namespace DataBaseMigration
             {
                 await dbContext.Database.MigrateAsync(cancellationToken);
             }
-            //await using var context = _context.CreateDbContext();
-            //if ((await context.Database.GetPendingMigrationsAsync(cancellationToken)).Any())
-            //{
-            //    await context.Database.MigrateAsync(cancellationToken);
-            //}
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

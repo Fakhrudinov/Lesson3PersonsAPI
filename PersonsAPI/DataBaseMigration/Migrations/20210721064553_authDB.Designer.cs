@@ -3,15 +3,17 @@ using System;
 using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataBaseMigration.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
-    partial class ApplicationDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210721064553_authDB")]
+    partial class authDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,67 +125,6 @@ namespace DataBaseMigration.Migrations
                             Id = 12,
                             Adress = "132123 555ывадтфывафыва 1",
                             Name = "ass Clinic4"
-                        });
-                });
-
-            modelBuilder.Entity("DataLayer.Abstraction.Entityes.ExaminationDataLayer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("ClinicId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("PaidDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProcedureCost")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ProcedureDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("ProcedureName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClinicId");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("Examinations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClinicId = 4,
-                            IsPaid = true,
-                            PaidDate = new DateTime(2021, 7, 31, 15, 29, 5, 540, DateTimeKind.Local).AddTicks(1035),
-                            PersonId = 22,
-                            ProcedureCost = 100,
-                            ProcedureDate = new DateTime(2021, 7, 31, 14, 29, 5, 539, DateTimeKind.Local).AddTicks(356),
-                            ProcedureName = "procedure 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClinicId = 4,
-                            IsPaid = false,
-                            PaidDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PersonId = 22,
-                            ProcedureCost = 100,
-                            ProcedureDate = new DateTime(2021, 7, 31, 15, 29, 5, 540, DateTimeKind.Local).AddTicks(1525),
-                            ProcedureName = "proc 2"
                         });
                 });
 
@@ -710,14 +651,20 @@ namespace DataBaseMigration.Migrations
                         new
                         {
                             Id = 1,
-                            Login = "user1",
-                            Password = "u/J44HZsYr9/fKnrSC7GkEPfGSdLlQY0rwmXjnj2V/M="
+                            Login = "test",
+                            Password = "testtest"
                         },
                         new
                         {
                             Id = 2,
-                            Login = "string",
-                            Password = "gY5iKrx9HOv75+lUDwwSrR5sUirs2DknyeMqU8yHimw="
+                            Login = "user2",
+                            Password = "12334bd4b"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Login = "user2",
+                            Password = "w34f5v4w5b6"
                         });
                 });
 
@@ -736,25 +683,6 @@ namespace DataBaseMigration.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DataLayer.Abstraction.Entityes.ExaminationDataLayer", b =>
-                {
-                    b.HasOne("DataLayer.Abstraction.Entityes.ClinicDataLayer", "Clinic")
-                        .WithMany("Examinations")
-                        .HasForeignKey("ClinicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DataLayer.Abstraction.Entityes.PersonDataLayer", "Person")
-                        .WithMany("Examinations")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Clinic");
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("DataLayer.Abstraction.Entityes.RefreshToken", b =>
                 {
                     b.HasOne("DataLayer.Abstraction.Entityes.User", null)
@@ -762,16 +690,6 @@ namespace DataBaseMigration.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DataLayer.Abstraction.Entityes.ClinicDataLayer", b =>
-                {
-                    b.Navigation("Examinations");
-                });
-
-            modelBuilder.Entity("DataLayer.Abstraction.Entityes.PersonDataLayer", b =>
-                {
-                    b.Navigation("Examinations");
                 });
 
             modelBuilder.Entity("DataLayer.Abstraction.Entityes.User", b =>

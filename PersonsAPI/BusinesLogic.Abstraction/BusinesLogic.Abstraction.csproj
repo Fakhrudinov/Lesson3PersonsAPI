@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DataLayer.Abstraction\DataLayer.Abstraction.csproj" />
+  </ItemGroup>
+
 </Project>
