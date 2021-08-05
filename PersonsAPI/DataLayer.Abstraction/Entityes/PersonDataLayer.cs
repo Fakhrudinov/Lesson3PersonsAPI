@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace DataLayer
+namespace DataLayer.Abstraction.Entityes
 {
-    public class Person
+    public class PersonDataLayer
     {
         [Key]
         public int Id { get; set; }
@@ -11,5 +12,6 @@ namespace DataLayer
         public string Email { get; set; }
         public string Company { get; set; }
         public int Age { get; set; }
+        public List<ClinicDataLayer> Clinics { get; set; } = new List<ClinicDataLayer>();
     }
 }

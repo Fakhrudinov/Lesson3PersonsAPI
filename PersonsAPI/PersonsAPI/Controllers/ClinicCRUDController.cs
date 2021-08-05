@@ -1,4 +1,9 @@
-﻿using BusinesLogic.Abstraction.Services;
+﻿using BusinesLogic.Abstraction.DTO;
+using BusinesLogic.Abstraction.Requests;
+using BusinesLogic.Abstraction.Services;
+using BusinesLogic.ValidateControllerData;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using PersonsAPI.Requests;
@@ -6,66 +11,58 @@ using PersonsAPI.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BusinesLogic.Abstraction.DTO;
-using BusinesLogic.ValidateControllerData;
-using FluentValidation.Results;
-using BusinesLogic.Abstraction.Requests;
-using Microsoft.AspNetCore.Authorization;
 
 namespace PersonsAPI.Controllers
 {
+    [Route("clinics")]
     [ApiController]
-    [Route("persons")]
     [Authorize]
 
-    public class PersonCRUDController : ControllerBase
+    public class ClinicCRUDController : ControllerBase
     {
-        private readonly IPersonService _personService;
+        private readonly IClinicService _clinicService;
         private readonly ServiceProperties _settings;
 
-        public PersonCRUDController(
-            IOptions<ServiceProperties> options, 
-            IPersonService personService)
+        public ClinicCRUDController(
+            IOptions<ServiceProperties> options,
+            IClinicService clinicService)
         {
-            _personService = personService;
+            _clinicService = clinicService;
             _settings = options.Value;
         }
-
         /// <summary>
-        /// Получить полный список Person. Возвращает список
+        /// Получить полный список клиник
         /// </summary>
         /// <returns></returns>
-        [HttpGet("all")]
-        public async Task<IEnumerable<PersonResponse>>  GetPersons()
+        [HttpGet("allClinic")]
+        public async Task<IEnumerable<ClinicResponse>> GetPersons()
         {
-            var result = await _personService.GetPersonsAsync();
-            return result.Select(p => new PersonResponse()
+            var result = await _clinicService.GetClinicsAsync();
+
+            return result.Select(p => new ClinicResponse()
             {
                 Id = p.Id,
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                Email = p.Email,
-                Company = p.Company,
-                Age = p.Age
+                Name = p.Name,
+                Adress = p.Adress,
             }).ToArray();
         }
 
         /// <summary>
-        /// Запрос поиска Person по Id. Возвращает один Person
+        /// Получить одну клинику по её Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPersonById(int id)
+        public async Task<IActionResult> GetClinicById(int id)
         {
             var response = new ValidationResponseModel();
 
-            PersonToGet newPerson = new PersonToGet();
-            newPerson.Id = id;
+            ClinicToGet newClinic = new ClinicToGet();
+            newClinic.Id = id;
 
             // простые проверки
-            PersonIDValidationService validator = new PersonIDValidationService();
-            var validationResult = validator.Validate(newPerson);
+            ClinicIDValidationService validator = new ClinicIDValidationService();
+            var validationResult = validator.Validate(newClinic);
 
             if (!validationResult.IsValid)
             {
@@ -75,34 +72,32 @@ namespace PersonsAPI.Controllers
             }
             else
             {
-                var personToGet = await _personService.GetPersonByIdAsync(id);
-                if(personToGet.Id == 0)
+                var clinicToGet = await _clinicService.GetClinicByIdAsync(id);
+                if (clinicToGet.Id == 0)
                 {
                     response.IsValid = false;
-                    response.ValidationMessages.Add("P-100.18 Person с таким Id не существует.");
+                    response.ValidationMessages.Add("C-100.18 Clinic с таким Id не существует.");
 
                     return UnprocessableEntity(response);
                 }
 
-                PersonResponse findedPerson = new PersonResponse();
-                findedPerson.Id = personToGet.Id;
-                findedPerson.FirstName = personToGet.FirstName;
-                findedPerson.LastName = personToGet.LastName;
-                findedPerson.Age = personToGet.Age;
-                findedPerson.Email = personToGet.Email;
-                findedPerson.Company = personToGet.Company;
+                ClinicResponse findedClinic = new ClinicResponse();
 
-                return Ok(findedPerson);
+                findedClinic.Id = clinicToGet.Id;
+                findedClinic.Name = clinicToGet.Name;
+                findedClinic.Adress = clinicToGet.Adress;
+
+                return Ok(findedClinic);
             }
         }
 
         /// <summary>
-        /// Получить список Person содержащих 'searchTerm'. Возвращает список
+        /// Получить список клиник содержащих в названии 'searchTerm'. Возвращает список
         /// </summary>
         /// <param name="searchTerm"></param>
         /// <returns></returns>
-        [HttpGet("search/{searchTerm}")]
-        public async Task<IActionResult> GetPersonByName([FromRoute] string searchTerm)
+        [HttpGet("search/")]
+        public async Task<IActionResult> GetClinicsByName([FromQuery] string searchTerm)
         {
             var response = new ValidationResponseModel();
 
@@ -110,7 +105,7 @@ namespace PersonsAPI.Controllers
             newSearch.SearchTerm = searchTerm;
 
             // простые проверки
-            PersonSearchValidationService validator = new PersonSearchValidationService();
+            ClinicSearchValidationService validator = new ClinicSearchValidationService();
             var validationResult = validator.Validate(newSearch);
 
             if (!validationResult.IsValid)
@@ -121,15 +116,13 @@ namespace PersonsAPI.Controllers
             }
             else
             {
-                var result = await _personService.GetPersonsByNameAsync(searchTerm);
-                result.Select(p => new PersonResponse()
+                var result = await _clinicService.GetClinicsByNameAsync(searchTerm);
+
+                result.Select(p => new ClinicResponse()
                 {
                     Id = p.Id,
-                    FirstName = p.FirstName,
-                    LastName = p.LastName,
-                    Email = p.Email,
-                    Company = p.Company,
-                    Age = p.Age
+                    Name = p.Name,
+                    Adress = p.Adress,
                 }).ToArray();
 
                 return Ok(result);
@@ -137,14 +130,14 @@ namespace PersonsAPI.Controllers
         }
 
         /// <summary>
-        /// Получить часть списка имен, содержащих 'searchTerm', где 'take' содержит количество Person на странице и 'skip' количество пропущеных страниц. 
+        /// Получить часть списка клиник, содержащих в названии 'searchTerm', где 'take' содержит количество Clinic на странице и 'skip' количество пропущеных страниц. 
         /// </summary>
         /// <param name="searchTerm"></param>
         /// <param name="skip"></param>
         /// <param name="take"></param>
         /// <returns></returns>
         [HttpGet("search/{searchTerm}/{skip}/{take}")]
-        public async Task<IActionResult> GetPersonByNameWithPagination([FromRoute] string searchTerm, [FromRoute] int skip, [FromRoute] int take)
+        public async Task<IActionResult> GetClinicsByNameWithPagination([FromRoute] string searchTerm, [FromRoute] int skip, [FromRoute] int take)
         {
             var response = new ValidationResponseModel();
 
@@ -154,7 +147,7 @@ namespace PersonsAPI.Controllers
             newSearch.Take = take;
 
             // простые проверки
-            PersonSearchWithPaginationValidationService validator = new PersonSearchWithPaginationValidationService();
+            ClinicSearchWithPaginationValidationService validator = new ClinicSearchWithPaginationValidationService();
             var validationResult = validator.Validate(newSearch);
 
             if (!validationResult.IsValid)
@@ -165,30 +158,26 @@ namespace PersonsAPI.Controllers
             }
             else
             {
-                var result = await _personService.GetPersonsByNameWithPaginationAsync(searchTerm, skip, take);
-                result.Select(p => new PersonResponse()
+                var result = await _clinicService.GetClinicsByNameWithPaginationAsync(searchTerm, skip, take);
+                result.Select(p => new ClinicResponse()
                 {
                     Id = p.Id,
-                    FirstName = p.FirstName,
-                    LastName = p.LastName,
-                    Email = p.Email,
-                    Company = p.Company,
-                    Age = p.Age
+                    Name = p.Name,
+                    Adress = p.Adress,
                 }).ToArray();
 
                 return Ok(result);
             }
         }
 
-
         /// <summary>
-        /// Получить часть списка Person, где 'take' содержит количество Person на странице и 'skip' количество пропущеных страниц. 
+        /// Получить часть списка клиник, где 'take' содержит количество Clinic на странице и 'skip' количество пропущеных страниц. 
         /// </summary>
         /// <param name="skip"></param>
         /// <param name="take"></param>
         /// <returns></returns>
         [HttpGet("{skip}/{take}")]
-        public async Task<IActionResult> GetPersonsWithPagination([FromRoute] int skip, [FromRoute] int take)
+        public async Task<IActionResult> GetClinicsWithPagination([FromRoute] int skip, [FromRoute] int take)
         {
             var response = new ValidationResponseModel();
 
@@ -197,7 +186,7 @@ namespace PersonsAPI.Controllers
             newSearch.Take = take;
 
             // простые проверки
-            PersonSearchWithPaginationValidationService validator = new PersonSearchWithPaginationValidationService();
+            ClinicSearchWithPaginationValidationService validator = new ClinicSearchWithPaginationValidationService();
             var validationResult = validator.Validate(newSearch);
 
             if (!validationResult.IsValid)
@@ -208,15 +197,12 @@ namespace PersonsAPI.Controllers
             }
             else
             {
-                var result = await _personService.GetPersonsWithPaginationAsync(skip, take);
-                result.Select(p => new PersonResponse()
+                var result = await _clinicService.GetClinicsWithPaginationAsync(skip, take);
+                result.Select(p => new ClinicResponse()
                 {
                     Id = p.Id,
-                    FirstName = p.FirstName,
-                    LastName = p.LastName,
-                    Email = p.Email,
-                    Company = p.Company,
-                    Age = p.Age
+                    Name = p.Name,
+                    Adress = p.Adress,
                 }).ToArray();
 
                 return Ok(result);
@@ -224,26 +210,23 @@ namespace PersonsAPI.Controllers
         }
 
         /// <summary>
-        /// Добавить новый объект Person
+        /// Добавить новую клинику
         /// </summary>
-        /// <param name="person"></param>
+        /// <param name="clinic"></param>
         /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> RegisterPerson([FromBody] Person person)
+        [HttpPost("post")]
+        public async Task<IActionResult> RegisterClinic([FromBody] Clinic clinic)
         {
             var response = new ValidationResponseModel();
 
-            PersonToPost newPerson = new PersonToPost();
+            ClinicToPost newClinic = new ClinicToPost();
 
-            newPerson.FirstName = person.FirstName;
-            newPerson.LastName = person.LastName;
-            newPerson.Age = person.Age;
-            newPerson.Email = person.Email;
-            newPerson.Company = person.Company;
+            newClinic.Name = clinic.Name;
+            newClinic.Adress = clinic.Adress;
 
             // простые проверки
-            PersonValidationService validator = new PersonValidationService();
-            var validationResult = validator.Validate(newPerson);
+            ClinicValidationService validator = new ClinicValidationService();
+            var validationResult = validator.Validate(newClinic);
 
             if (!validationResult.IsValid)
             {
@@ -254,8 +237,8 @@ namespace PersonsAPI.Controllers
 
             // проверим имя на наличие в БД
             // https://docs.fluentvalidation.net/en/latest/async.html
-            PersonValidationAsyncService validatorAsync = new PersonValidationAsyncService(_personService);
-            var validationResultAsync = await validatorAsync.ValidateAsync(newPerson);
+            ClinicValidationAsyncService validatorAsync = new ClinicValidationAsyncService(_clinicService);
+            var validationResultAsync = await validatorAsync.ValidateAsync(newClinic);
 
             if (!validationResultAsync.IsValid)
             {
@@ -265,31 +248,29 @@ namespace PersonsAPI.Controllers
             }
             else
             {
-                await _personService.RegisterPersonAsync(newPerson);
-                return Ok(newPerson);
+                await _clinicService.RegisterClinicAsync(newClinic);
+                return Ok(newClinic);
             }
         }
 
         /// <summary>
-        /// Редактирование данных существующего Person
+        /// Редактирование данных существующей клиники
         /// </summary>
-        /// <param name="person"></param>
+        /// <param name="clinic"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> EditPerson([FromBody] PersonResponse person)
+        public async Task<IActionResult> EditClinic([FromBody] ClinicResponse clinic)
         {
             var response = new ValidationResponseModel();
 
-            PersonToPost newPerson = new PersonToPost();
-            newPerson.FirstName = person.FirstName;
-            newPerson.LastName = person.LastName;
-            newPerson.Age = person.Age;
-            newPerson.Email = person.Email;
-            newPerson.Company = person.Company;
+            ClinicToPost newClinic = new ClinicToPost();
+
+            newClinic.Name = clinic.Name;
+            newClinic.Adress = clinic.Adress;
 
             // простые проверки
-            PersonValidationService validator = new PersonValidationService();
-            var validationResult = validator.Validate(newPerson);
+            ClinicValidationService validator = new ClinicValidationService();
+            var validationResult = validator.Validate(newClinic);
 
             if (!validationResult.IsValid)
             {
@@ -298,14 +279,14 @@ namespace PersonsAPI.Controllers
                 return BadRequest(response);
             }
 
-            PersonToGet newPersonId = new PersonToGet();
-            newPersonId.Id = person.Id;
+            ClinicToGet newClinicId = new ClinicToGet();
+            newClinicId.Id = clinic.Id;
 
             // простые проверки Id
-            PersonIDValidationService validatorId = new PersonIDValidationService();
+            ClinicIDValidationService validatorId = new ClinicIDValidationService();
 
-            PersonToGet checkIdexist = new PersonToGet();
-            checkIdexist.Id = person.Id;
+            ClinicToGet checkIdexist = new ClinicToGet();
+            checkIdexist.Id = clinic.Id;
             var validationIdResult = validatorId.Validate(checkIdexist);
 
             if (!validationIdResult.IsValid)
@@ -317,7 +298,7 @@ namespace PersonsAPI.Controllers
 
             // проверим id на наличие в БД
             // https://docs.fluentvalidation.net/en/latest/async.html
-            PersonByIdValidationAsyncService validatorAsync = new PersonByIdValidationAsyncService(_personService);
+            ClinicByIdValidationAsyncService validatorAsync = new ClinicByIdValidationAsyncService(_clinicService);
 
             var validationResultAsync = await validatorAsync.ValidateAsync(checkIdexist);
 
@@ -326,40 +307,37 @@ namespace PersonsAPI.Controllers
                 response = SetResponseFromValidationResult(validationResultAsync, response);
 
                 response.IsValid = false;
-                response.ValidationMessages.Add("P-100.16 Person с таким Id не существует.");
+                response.ValidationMessages.Add("C-100.13 Клиника с таким Id не существует.");
 
                 return UnprocessableEntity(response);
             }
             else
             {
-                PersonToGet editPerson = new PersonToGet();                
-                editPerson.FirstName = person.FirstName;
-                editPerson.LastName = person.LastName;
-                editPerson.Age = person.Age;
-                editPerson.Email = person.Email;
-                editPerson.Company = person.Company;
+                ClinicToGet editClinic = new ClinicToGet();
 
-                await _personService.EditPersonAsync(editPerson, person.Id);
+                editClinic.Name = clinic.Name;
+                editClinic.Adress = clinic.Adress;
 
-                return Ok(editPerson);
+                await _clinicService.EditClinicAsync(editClinic, clinic.Id);
+
+                return Ok(editClinic);
             }
         }
 
-
         /// <summary>
-        /// Удаление существующего Person
+        /// Удаление существующей клиники
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePersonById([FromRoute] int id)
+        public async Task<IActionResult> DeleteClinicById([FromRoute] int id)
         {
             var response = new ValidationResponseModel();
 
             // простые проверки Id
-            PersonIDValidationService validatorId = new PersonIDValidationService();
+            ClinicIDValidationService validatorId = new ClinicIDValidationService();
 
-            PersonToGet checkIdexist = new PersonToGet();
+            ClinicToGet checkIdexist = new ClinicToGet();
             checkIdexist.Id = id;
             var validationIdResult = validatorId.Validate(checkIdexist);
 
@@ -372,7 +350,7 @@ namespace PersonsAPI.Controllers
 
             // проверим id на наличие в БД
             // https://docs.fluentvalidation.net/en/latest/async.html
-            PersonByIdValidationAsyncService validatorAsync = new PersonByIdValidationAsyncService(_personService);
+            ClinicByIdValidationAsyncService validatorAsync = new ClinicByIdValidationAsyncService(_clinicService);
 
             var validationResultAsync = await validatorAsync.ValidateAsync(checkIdexist);
 
@@ -381,18 +359,17 @@ namespace PersonsAPI.Controllers
                 response = SetResponseFromValidationResult(validationResultAsync, response);
 
                 response.IsValid = false;
-                response.ValidationMessages.Add("P-100.17 Person с таким Id не существует.");
+                response.ValidationMessages.Add("C-100.14 Клиника с таким Id не существует.");
 
                 return UnprocessableEntity(response);
             }
             else
             {
-                await _personService.DeletePersonByIdAsync(id);
+                await _clinicService.DeleteClinicByIdAsync(id);
 
                 return Ok();
             }
         }
-
 
         private ValidationResponseModel SetResponseFromValidationResult(ValidationResult validationResultAsync, ValidationResponseModel response)
         {

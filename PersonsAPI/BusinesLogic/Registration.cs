@@ -1,7 +1,6 @@
 ﻿using BusinesLogic.Abstraction.Services;
 using BusinesLogic.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace BusinesLogic
 {
@@ -10,6 +9,16 @@ namespace BusinesLogic
         public static IServiceCollection RegisterBusinesLogic (this IServiceCollection services)
         {
             return services.AddTransient<IPersonService, PersonService>();
+        }
+
+        public static IServiceCollection RegisterBusinesLogicClinic(this IServiceCollection services)
+        {
+            return services.AddTransient<IClinicService, ClinicService>();
+        }
+
+        public static IServiceCollection RegisterBusinesLogicPersonToClinic(this IServiceCollection services)
+        {
+            return services.AddTransient<IPersonToClinicService, PersonToClinicService>();
         }
 
     }

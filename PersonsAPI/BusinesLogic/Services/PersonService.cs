@@ -1,6 +1,6 @@
 ﻿using BusinesLogic.Abstraction.DTO;
 using BusinesLogic.Abstraction.Services;
-using DataLayer;
+using DataLayer.Abstraction.Entityes;
 using DataLayer.Abstraction.Repositories;
 using PersonsAPI.Requests;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace BusinesLogic.Services
                 findedPerson.Email = result.Email;
                 findedPerson.Company = result.Company;
             }
-            return findedPerson;            
+            return findedPerson;
         }
 
         public async Task<IEnumerable<PersonToGet>> GetPersonsByNameWithPaginationAsync(string searchTerm, int skip, int take)
@@ -95,7 +95,7 @@ namespace BusinesLogic.Services
 
         public async Task RegisterPersonAsync(PersonToPost person)
         {
-            Person newPerson = new Person();
+            PersonDataLayer newPerson = new PersonDataLayer();
 
             newPerson.FirstName = person.FirstName;
             newPerson.LastName = person.LastName;
@@ -108,7 +108,7 @@ namespace BusinesLogic.Services
 
         public async Task EditPersonAsync(PersonToGet person, int id)
         {
-            Person newPerson = new Person();
+            PersonDataLayer newPerson = new PersonDataLayer();
 
             newPerson.FirstName = person.FirstName;
             newPerson.LastName = person.LastName;
@@ -123,5 +123,5 @@ namespace BusinesLogic.Services
         {
             await _repository.DeletePersonByIdAsync(id);
         }
-    }
+    }   
 }
