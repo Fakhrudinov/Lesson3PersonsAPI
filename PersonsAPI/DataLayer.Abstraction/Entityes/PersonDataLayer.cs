@@ -13,5 +13,7 @@ namespace DataLayer.Abstraction.Entityes
         public string Company { get; set; }
         public int Age { get; set; }
         public List<ClinicDataLayer> Clinics { get; set; } = new List<ClinicDataLayer>();
+
+        public List<ExaminationDataLayer> Examinations { get; set; } = new List<ExaminationDataLayer>();
     }
 }

@@ -16,7 +16,7 @@ namespace PersonsAPI.Controllers
 {
     [Route("clinics")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
 
     public class ClinicCRUDController : ControllerBase
     {

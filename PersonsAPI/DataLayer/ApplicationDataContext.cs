@@ -1,6 +1,6 @@
 ﻿using DataLayer.Abstraction.Entityes;
 using Microsoft.EntityFrameworkCore;
-
+using System;
 
 namespace DataLayer
 {
@@ -8,6 +8,7 @@ namespace DataLayer
     {
         public DbSet<PersonDataLayer> Persons { get; set; }
         public DbSet<ClinicDataLayer> Clinics { get; set; }
+        public DbSet<ExaminationDataLayer> Examinations { get; set; }
 
 
         public DbSet<User> Users { get; set; }
@@ -26,6 +27,21 @@ namespace DataLayer
             .Entity<ClinicDataLayer>()
             .HasMany(c => c.Persons)
             .WithMany(s => s.Clinics);
+
+            modelBuilder.Entity<ExaminationDataLayer>()
+                .HasOne(p => p.Person)
+                .WithMany(b => b.Examinations)
+                .HasForeignKey(p => p.PersonId);
+
+            modelBuilder.Entity<ExaminationDataLayer>()
+                .HasOne(p => p.Clinic)
+                .WithMany(b => b.Examinations)
+                .HasForeignKey(p => p.ClinicId);
+
+            //modelBuilder.Entity<ExaminationDataLayer>().HasData(
+            //    new ExaminationDataLayer { Id = 1, ProcedureName = "procedure 1", ClinicId = 4 , PersonId = 22, ProcedureCost = 100, ProcedureDate = DateTime.Now.AddHours(-1), IsPaid = true, PaidDate = DateTime.Now },
+            //    new ExaminationDataLayer { Id = 2, ProcedureName = "proc 2", ClinicId = 4 , PersonId = 22, ProcedureCost = 100, ProcedureDate = DateTime.Now, IsPaid = false }
+            //    );
 
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, Login = "user1", Password = "u/J44HZsYr9/fKnrSC7GkEPfGSdLlQY0rwmXjnj2V/M=" },//pass=1qazXSW@

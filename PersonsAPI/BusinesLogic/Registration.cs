@@ -21,5 +21,10 @@ namespace BusinesLogic
             return services.AddTransient<IPersonToClinicService, PersonToClinicService>();
         }
 
+        public static IServiceCollection RegisterBusinesLogicExamination(this IServiceCollection services)
+        {
+            return services.AddTransient<IExaminationService, ExaminationService>();
+        }
+
     }
 }

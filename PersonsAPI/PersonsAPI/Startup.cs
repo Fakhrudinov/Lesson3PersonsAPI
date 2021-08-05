@@ -1,7 +1,9 @@
 using BusinesLogic;
 using BusinesLogic.Abstraction.Services;
 using BusinesLogic.Services;
+using BusinesLogic.ValidateControllerData;
 using DataLayer;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +34,7 @@ namespace PersonsAPI
         {
             services.AddScoped<IUserService, UserService>();
             services.AddCors();
+            
             services.AddControllers();
 
             services.AddAuthentication(x =>
@@ -96,11 +99,13 @@ namespace PersonsAPI
             services.RegisterBusinesLogic();            
             services.RegisterBusinesLogicClinic();
             services.RegisterBusinesLogicPersonToClinic();
+            services.RegisterBusinesLogicExamination();
 
             services.RegisterDataLayer();
             services.RegisterDataLayerClinic();
             services.RegisterDataLayerPersonToClinic();
             services.RegisterUserRepository();
+            services.RegisterExaminationRepository();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
