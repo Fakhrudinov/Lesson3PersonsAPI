@@ -1,6 +1,5 @@
 ﻿using BusinesLogic.Abstraction.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PersonsAPI.Requests;
 using PersonsAPI.Responses;
@@ -8,26 +7,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinesLogic.Abstraction.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PersonsAPI.Controllers
 {
     [ApiController]
     [Route("persons")]
+    [Authorize]
+
     public class PersonCRUDController : ControllerBase
     {
-        private readonly ILogger<PersonCRUDController> _logger;
         private readonly IPersonService _personService;
         private readonly ServiceProperties _settings;
 
         public PersonCRUDController(
-            ILogger<PersonCRUDController> logger, 
             IOptions<ServiceProperties> options, 
             IPersonService personService)
         {
-            _logger = logger;
             _personService = personService;
             _settings = options.Value;
-
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace PersonsAPI.Controllers
         /// <param name="searchTerm"></param>
         /// <returns></returns>
         [HttpGet("search/")]
-        public async Task<IEnumerable<PersonResponse>> GetPersonById([FromQuery] string searchTerm)
+        public async Task<IEnumerable<PersonResponse>> GetPersonByName([FromQuery] string searchTerm)
         {
             var result = await _personService.GetPersonsByNameAsync(searchTerm);
             return result.Select(p => new PersonResponse()
