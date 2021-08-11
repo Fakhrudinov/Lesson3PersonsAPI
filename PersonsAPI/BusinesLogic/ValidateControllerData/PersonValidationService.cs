@@ -26,7 +26,7 @@ namespace BusinesLogic.ValidateControllerData
             RuleFor(x => x.Email)
                 .Length(5, 50)
                     .WithMessage("{PropertyName} длинна должна быть от пяти до 50 символов")
-                    .WithErrorCode("C-100.10")
+                    .WithErrorCode("P-100.10")
                 .Matches("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$")
                     .WithMessage("{PropertyName} некорректен")
                     .WithErrorCode("P-100.13");
@@ -34,10 +34,10 @@ namespace BusinesLogic.ValidateControllerData
             RuleFor(x => x.Age)
                 .GreaterThan(0)
                     .WithMessage("{PropertyName} возраст должен быть больше ноля")
-                    .WithErrorCode("C-100.14")
+                    .WithErrorCode("P-100.14")
                 .LessThanOrEqualTo(120)
                     .WithMessage("{PropertyName} возраст не может превышать 120 лет")
-                    .WithErrorCode("C-100.15");
+                    .WithErrorCode("P-100.15");
 
             // а компании может и не быть.
         }

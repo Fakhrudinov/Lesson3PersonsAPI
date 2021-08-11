@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BusinesLogic.Services
 {
-    class ExaminationService : IExaminationService
+    public class ExaminationService : IExaminationService
     {
         private IExaminationRepository _repository;
 

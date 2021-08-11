@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinesLogic.Services
 {
-    class ClinicService : IClinicService
+    public class ClinicService : IClinicService
     {
         private IClinicRepository _repository;
 

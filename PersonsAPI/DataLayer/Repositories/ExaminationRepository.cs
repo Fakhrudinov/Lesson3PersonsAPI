@@ -20,13 +20,6 @@ namespace DataLayer.Repositories
 
         public async Task<int> CreateExaminationAsync(ExaminationDataLayer examination)
         {
-
-            //var person = (await _context.Persons.Where(p => p.Id.Equals(examination.PersonId)).SingleOrDefaultAsync());
-            //var clinic = (await _context.Clinics.Where(p => p.Id.Equals(examination.ClinicId)).SingleOrDefaultAsync());
-
-            //_context.Clinics.Update(clinic).Entity.Examinations.Add(examination);
-            //_context.Persons.Update(person).Entity.Examinations.Add(examination);
-
             await _context.Examinations.AddAsync(examination);
 
             await _context.SaveChangesAsync();

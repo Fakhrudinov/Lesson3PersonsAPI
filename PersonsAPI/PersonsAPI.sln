@@ -9,11 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBaseMigration", "DataBaseMigration\DataBaseMigration.csproj", "{5663D02B-AA5D-4158-8D01-773BC0238ABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer.Abstraction", "DataLayer.Abstraction\DataLayer.Abstraction.csproj", "{5A773CF2-9047-4889-A880-FFF277501BBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer.Abstraction", "DataLayer.Abstraction\DataLayer.Abstraction.csproj", "{5A773CF2-9047-4889-A880-FFF277501BBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinesLogic", "BusinesLogic\BusinesLogic.csproj", "{EC87F433-0ECE-42F3-93E7-F2F79C4C6AFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinesLogic", "BusinesLogic\BusinesLogic.csproj", "{EC87F433-0ECE-42F3-93E7-F2F79C4C6AFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinesLogic.Abstraction", "BusinesLogic.Abstraction\BusinesLogic.Abstraction.csproj", "{E89813B2-7DD2-479E-B28E-D54B7B6E233A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinesLogic.Abstraction", "BusinesLogic.Abstraction\BusinesLogic.Abstraction.csproj", "{E89813B2-7DD2-479E-B28E-D54B7B6E233A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{18AF8838-20F1-4BB2-A9B7-E07CC076A4DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A129BA46-8289-4284-BE0F-109EC1B5AE25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,9 +49,16 @@ Global
 		{E89813B2-7DD2-479E-B28E-D54B7B6E233A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E89813B2-7DD2-479E-B28E-D54B7B6E233A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E89813B2-7DD2-479E-B28E-D54B7B6E233A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A129BA46-8289-4284-BE0F-109EC1B5AE25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A129BA46-8289-4284-BE0F-109EC1B5AE25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A129BA46-8289-4284-BE0F-109EC1B5AE25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A129BA46-8289-4284-BE0F-109EC1B5AE25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A129BA46-8289-4284-BE0F-109EC1B5AE25} = {18AF8838-20F1-4BB2-A9B7-E07CC076A4DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D26D7852-3DE8-4699-A8F4-F1469EAC1DDC}
