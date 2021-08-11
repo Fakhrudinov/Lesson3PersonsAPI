@@ -1,0 +1,9 @@
+﻿namespace BusinesLogic.Abstraction.Requests
+{
+    public class IdWithPaginationRequest
+    {
+        public int Id { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
+    }
+}
